@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\LoginController;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,5 @@ Route::controller(RegistrationController::class)->group(function (){
 
 //Route::post('/register',[RegistrationController::class,'register']);
 Route::post('/login',[LoginController::class,'login']);
+
+Route::apiResource('category',CategoryController::class);

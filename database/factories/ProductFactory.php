@@ -20,13 +20,14 @@ class ProductFactory extends Factory
      */
     public function definition(): array
     {
-        $catehory_id = Category::pluck(id)->toArray();
+        $category_id = Category::pluck('id')->toArray();
+      // dd($category_id);
         return [
-            'category_id'=>$catehory_id,
+            'category_id'=>fake()->randomElement($category_id),
             'name'=>fake()->randomElement,
             'description'=>fake()->text,
-            'qty_stock'=>fake()->numberBetween(5,20),
-            'price'=>fake()->numberBetween(200,500)
+            'qty_stock'=>fake()->numberBetween(5,10),
+            'price'=>fake()->numberBetween(100,500)
         ];
     }
 }
