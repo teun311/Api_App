@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('description');
             $table->integer('qty_stock');
             $table->integer('price');
+            $table->string('image')->nullable();
             $table->tinyInteger('status')->default('0');
             $table->timestamps();
         });
