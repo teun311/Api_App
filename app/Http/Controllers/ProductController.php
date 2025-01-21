@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\SuccessResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -33,10 +34,13 @@ class ProductController extends Controller
     {
 
         $new_product = $request->validated();
+        $image = $request->file('image');
+        //dd($image) ;
 
-        $new_product['image'] = array_key_exists('image',$new_product)
-            ? Storage::putFile('',$new_product['image'])
+        $image = array_key_exists('image',$new_product)
+            ? Storage::disk('images')->putFileAs('/',$image, time().'-'.rand(1,9999).'.'.$image->extension())
             :'';
+        $new_product['image'] = $image;
         $product = Product::create($new_product);
         return (new ProductResource(['message'=>'product insert successfully','data'=>$product]))->response()->setStatusCode(201);
     }
@@ -52,9 +56,19 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
-        //
+        $upadated_product =$request->validated();
+        $image = $request->file('image');
+
+        $image = (array_key_exists('image',$upadated_product)
+            ?Storage::disk('images')->delete($product->image) :'')
+            ?Storage::disk('images')->putFileAs('/',$image,time().'-'.rand(1,9999).'.'.$image->extension()) :$product->image;
+       // dd($image);
+        $upadated_product['image']= $image;
+        $product->update($upadated_product);
+        return (new ProductResource(['message'=> 'Product update successfully','data'=>$product]))->response()->setStatusCode(201);
+
     }
 
     /**
@@ -62,6 +76,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        Storage::delete($product->image);
+        $product->delete();
+        return (new SuccessResource(['message'=>'product deleted successsfully']));
     }
 }
