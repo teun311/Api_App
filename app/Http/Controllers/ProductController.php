@@ -76,7 +76,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        Storage::delete($product->image);
+        Storage::disk('image')->delete($product->image);
         $product->delete();
         return (new SuccessResource(['message'=>'product deleted successsfully']));
     }
