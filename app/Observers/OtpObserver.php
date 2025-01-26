@@ -12,7 +12,7 @@ class OtpObserver
      */
     public function created(Otp $otp): void
     {
-        dd('created');
+       // dd('created');
     }
 
     /**
